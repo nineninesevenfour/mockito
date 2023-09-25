@@ -1,0 +1,34 @@
+Subject: [PATCH] + "Can I mock system properties?"
+---
+Index: FAQ.md
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/FAQ.md b/FAQ.md
+--- a/FAQ.md	(revision c56894cb2e3db8c0a52b1a4bdaebc2288f76961a)
++++ b/FAQ.md	(revision 754226ed03f168a827210f79e745cb17a4f2a859)
+@@ -141,6 +141,22 @@
+ violation of the [Law of Demeter](http://en.wikipedia.org/wiki/Law_of_Demeter). You don't want to mess with Demeter. Since you have been warned 
+ check out Mockito [deep stubs](http://www.javadoc.io/page/org.mockito/mockito-core/latest/org/mockito/Mockito.html#RETURNS_DEEP_STUBS).
+ 
++#### Can I mock system properties?
++
++While there are good reasons to disallow mocking `java.lang.System` and `java.lang.Thread` entirely, it is possible to mock system properties.
++To replace all existing system properties, you can do:
++```java
++  Properties mockedProperties = Mockito.mock(Properties.class);
++  Mockito.when(mockedProperties.getProperty("theAnswer")).thenReturn("42");
++  System.setProperties(mockedProperties);
++```
++To add new values to existing system properties you can use a spy:
++```java
++  Properties spiedProperties = Mockito.spy(System.getProperties());
++  Mockito.when(spiedProperties.getProperty("theAnswer")).thenReturn("42");
++  System.setProperties(spiedProperties);
++```
++
+ #### Why this FAQ doesn't have answers to my questions?
+ 
+ Do you have any suggestions? Write to our [mailing list](http://groups.google.com/group/mockito).
+\ No newline at end of file
